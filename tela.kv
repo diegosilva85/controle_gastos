@@ -1,0 +1,175 @@
+#:import NoTransition kivy.uix.screenmanager.NoTransition
+<Tela>:
+    ScreenManager:
+        id: screen
+        transition: NoTransition()
+        MDScreen:
+            name: "home"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding:20
+                spacing:2
+                size_hint_y:1
+                md_bg_color:0, 0, 0.5, 1
+                MDBoxLayout:
+                    padding: 10
+                    spacing: dp(50)
+                    pos_hint: {"center_x": .5, "center_y": .8}
+                    size_hint_y:0.2
+                    md_bg_color:0, 0.2, 1, 1
+                    MDLabel:
+                        font_size: 50
+                        text: root.mes_atual
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1                    
+                    MDLabel:
+                        id: valor_reais
+                        font_size: 50
+                        text: f'R$ {app.total_mes(app.sessao):.2f}'
+                        theme_text_color: "Custom"
+                        text_color: 1, 1, 1, 1                        
+                MDBoxLayout:
+                    orientation:"vertical"
+                    padding:10
+                    spacing:2
+                    size_hint_y:0.8
+                    md_bg_color: 0, 0.6, 1, 1
+                    ScrollView:
+                        MDList:
+                            id: container
+                MDBoxLayout:
+                    size_hint_y: .1
+        MDScreen:
+            name: "add"
+            ScrollView:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    padding:dp(30)
+                    spacing:dp(2)
+                    size_hint_y:1                  
+                    md_bg_color:0, 0, 1, 1
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        padding: 50
+                        spacing: 5
+                        MDTextField:
+                            id: valor
+                            hint_text:"Valor Gasto"
+                            text: app.formatted_text
+                            size_hint_y: 0.15
+                            on_text: app.on_text_change(self.text)
+                            input_type: "number"
+                            input_filter: app.input_filter
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            mode:"fill"
+                            background_color: "white"
+                        MDTextField:
+                            id: desc
+                            hint_text: "Descrição"
+                            multiline: False
+                            size_hint_y: 0.15
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            mode:"fill"
+                            background_color: "white"
+                            max_text_length: 80                        
+                        MDRaisedButton:
+                            id: categoria_add
+                            text: "Categoria"
+                            size_hint_x: 1
+                            size_hint_y: 0.15
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: root.open_menu(self, "add")
+                        MDRaisedButton:
+                            id: pagamento
+                            text: "Pagamento"
+                            size_hint_x: 1
+                            size_hint_y: 0.15
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: root.open_menu(self, "pagamento")
+                        MDRaisedButton:
+                            id: data
+                            text: root.hoje
+                            size_hint_x: 1
+                            size_hint_y: 0.15
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: root.mostrar_calendario(self)                        
+                        MDRaisedButton:
+                            text: "Adicionar"
+                            size_hint_y: 0.20
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: root.adicionar_gasto(self)
+                    MDBoxLayout:
+                        size_hint_y: .1    
+        MDScreen:
+            name: 'detalhes'
+            ScrollView:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    padding:20
+                    spacing:2
+                    size_hint_y:1
+                    md_bg_color:0, 0, 0.5, 1
+                    MDBoxLayout:
+                        padding: 10
+                        spacing: dp(50)
+                        pos_hint: {"center_x": .5, "center_y": .8}
+                        size_hint_y:0.2
+                        md_bg_color:0, 0.2, 1, 1
+                        ScrollView:
+                            MDList:
+                                id: card_container
+        MDScreen:
+            name: 'estatisticas'
+            ScrollView:            
+                MDBoxLayout:
+                    orientation: "vertical"
+                    padding: 20
+                    spacing: 2
+                    size_hint_y: 1
+                    md_bg_color: 0, 0, 0.5, 1
+                    MDBoxLayout:
+                        padding: 10
+                        spacing: dp(50)
+                        pos_hint: {"center_x": .5, "center_y": .8}
+                        size_hint_y:0.2
+                        md_bg_color:0, 0.2, 1, 1
+                        ScrollView:
+                            MDList:
+                                id: meses_container    
+                            
+
+    NavBar
+        padding: dp(3)
+        spacing: dp(root.distancia_icones)
+        elevation: 10
+        md_bg_color: "white"
+        size_hint_y: 0.1
+        size_hint_x: 1
+        pos_hint: {"center_x":.5, "center_y":.05}
+        radius: [16]
+        MDIconButton:
+            icon:"home"
+            theme_icon_color: "Custom"
+            icon_color:"blue"
+            icon_size: "36sp"
+            on_release: screen.current = "home"
+        MDIconButton:
+            icon:"plus"
+            theme_icon_color: "Custom"
+            icon_color:"blue"
+            icon_size: "36sp"
+            on_release: screen.current = "add"
+        MDIconButton:
+            icon:"history"
+            theme_icon_color: "Custom"
+            icon_size: "36sp"
+            icon_color:"blue"
+            on_release: screen.current = "estatisticas"
+        MDIconButton:
+            icon:"account"
+            theme_icon_color: "Custom"
+            icon_size: "36sp"
+            icon_color:"blue"
+            on_release: app.sincronizar_banco()
+
+        
