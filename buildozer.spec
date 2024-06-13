@@ -44,10 +44,16 @@ requirements = python3, certifi==2024.2.2, charset-normalizer==3.3.2, distlib==0
 # requirements.source.kivy = ../../kivy
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = splash_cg_hdpi.png
+android.presplash_ldpi = splash_cg_ldpi.png
+android.presplash_mdpi = splash_cg_mdpi.png
+android.presplash_hdpi = splash_cg_hdpi.png
+android.presplash_xhdpi = splash_cg_xhdpi.png
+android.presplash_xxhdpi = splash_cg_xxhdpi.png
+android.presplash_xxxhdpi = splash_cg_xxxhdpi.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+#icon.filename = "cg-hdpi.png"
 
 # (list) Supported orientations
 # Valid options are: landscape, portrait, portrait-reverse or landscape-reverse
@@ -351,7 +357,8 @@ android.allow_backup = True
 # (str) extra command line arguments to pass when invoking pythonforandroid.toolchain
 #p4a.extra_args =
 
-
+# Icone do aplicativo
+icon.filename = cg-hdpi.png
 
 #
 # iOS specific

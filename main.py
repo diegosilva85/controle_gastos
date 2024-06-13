@@ -18,6 +18,8 @@ from kivymd.uix.screen import MDScreen
 # from kivy.uix.popup import Popup
 # from kivymd.uix.button import MDRaisedButton
 # from kivy.metrics import dp
+# from kivymd.uix.list import OneLineListItem
+# from kivymd.uix.bottomsheet import MDListBottomSheet
 import re
 from sqlalchemy import Column, String
 
@@ -33,14 +35,17 @@ Builder.load_file("tela.kv")
 meses = {'01': 'Janeiro', '02': 'Fevereiro', '03': 'Março', '04': 'Abril', '05': 'Maio', '06': 'Junho', '07': 'Julho',
          '08': 'Agosto', '09': 'Setembro', '10': 'Outubro', '11': 'Novembro', '12': 'Dezembro'}
 url = "https://diego-matematica-bbe5cdd19f71.herokuapp.com/controle_gastos"
-mes_ano = ['05/2024', '06/2024', '07/2024']
+mes_ano = ['05/2024', '06/2024']
+if datetime.now().strftime('%m/%Y') not in mes_ano:
+    mes_ano.append(datetime.now().strftime('%m/%Y'))
+
 
 class Gastos(Base):
     __tablename__ = "gastos"
 
 
 class GastosAuxiliar(Auxiliar):
-    __tablename__ = "auxiliar"
+    __tablename__ = "auxiliar"  
 
 
 class Tela(MDScreen):
@@ -50,7 +55,8 @@ class Tela(MDScreen):
                   "outros"]
     pagamento = ["Pix", "Crédito", "Débito", "Dinheiro"]
     distancia_icones = base * 0.05
-    
+    comprimento_x = base * 0.0003
+      
     def open_menu(self, item, tela):
         if tela == "pagamento":
             items_categoria = Tela.pagamento
@@ -64,15 +70,15 @@ class Tela(MDScreen):
                 "on_release": lambda x=f"{categoria}": self.set_item(x, tela),
             } for categoria in items_categoria]
         self.ids.menu = MDDropdownMenu(
-            caller=item,
+            caller=self.ids.categoria_add,
             items=menu_items,
-            position="center",
+            position="bottom",
         )
         self.ids.menu.open()
 
     def set_item(self, text_item, tela):
-        if tela == "add":
-            self.ids.categoria_add.text = text_item
+        if tela == "add":  
+            self.ids.categoria.text = text_item
         elif tela == "pagamento":
             self.ids.pagamento.text = text_item
         else:
@@ -85,7 +91,7 @@ class Tela(MDScreen):
         dados_gasto = {
             'valor': self.ids.valor.text,
             'data': self.ids.data.text,
-            'categoria': self.ids.categoria_add.text.lower(),
+            'categoria': self.ids.categoria.text.lower(),
             'parcelas': 1,
             'descricao': self.ids.desc.text,
             'mes_ano': mes_ano,
@@ -98,6 +104,7 @@ class Tela(MDScreen):
         self.ids.container.clear_widgets()
         print("Apagados widgets.")
         self.app_instance.cards_categorias_home(self.app_instance.sessao)
+        self.app_instance.estatisticas()
         print("finalizado.")
        
         confirmacao = self.app_instance.confirmar(enviado="enviado")
@@ -130,6 +137,7 @@ class TelaApp(MDApp):
         self.formatted_text = ""
         self.sessao = []
         self.executor.submit(self.atualizar_sessao)
+        mes_ano.reverse()
 
     def build(self):
         root = self.root
@@ -243,6 +251,7 @@ class TelaApp(MDApp):
             self.root.ids.valor_reais.text = f'R$ {self.total_mes(self.sessao):.2f}'
             self.root.ids.container.clear_widgets()
             self.cards_categorias_home(self.sessao)
+            self.estatisticas()
             self.dialog.dismiss()
 
         # Função para fechar o diálogo sem deletar
@@ -336,9 +345,12 @@ class TelaApp(MDApp):
             return False
         
     def estatisticas(self):
-        mes_ano.reverse()
-        for item in mes_ano:            
-            total = banco_dados.total_mes(tabela=Gastos, mes_ano=item)
+        self.root.ids.meses_container.clear_widgets()
+        for item in mes_ano:
+            if item == Tela.hoje[3:]:
+                total = self.total_mes(lista=self.sessao)
+            else:       
+                total = banco_dados.total_mes(tabela=Gastos, mes_ano=item)
             if total != 0:
                 card = MDCard(orientation='horizontal', size_hint=(1, None), size=("250dp", "100dp"), pos_hint={"center_x": 0.5, "center_y": 0.5},
                     elevation=0, ripple_behavior=False)

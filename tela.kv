@@ -1,5 +1,5 @@
 #:import NoTransition kivy.uix.screenmanager.NoTransition
-<Tela>:
+<Tela>:         
     ScreenManager:
         id: screen
         transition: NoTransition()
@@ -39,15 +39,16 @@
                             id: container
                 MDBoxLayout:
                     size_hint_y: .1
+          
         MDScreen:
-            name: "add"
+            name: "add"                      
             ScrollView:
                 MDBoxLayout:
                     orientation: "vertical"
-                    padding:dp(30)
+                    padding:dp(10)
                     spacing:dp(2)
                     size_hint_y:1                  
-                    md_bg_color:0, 0, 1, 1
+                    md_bg_color:1, 1, 1, 1
                     MDBoxLayout:
                         orientation: "vertical"
                         padding: 50
@@ -56,42 +57,42 @@
                             id: valor
                             hint_text:"Valor Gasto"
                             text: app.formatted_text
-                            size_hint_y: 0.15
+                            font_size: '36sp' 
+                            size_hint_y: 0.2
+                            size_hint_x: 0.5
                             on_text: app.on_text_change(self.text)
                             input_type: "number"
                             input_filter: app.input_filter
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            mode:"fill"
                             background_color: "white"
                         MDTextField:
                             id: desc
                             hint_text: "Descrição"
                             multiline: False
                             size_hint_y: 0.15
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            mode:"fill"
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}                            
                             background_color: "white"
-                            max_text_length: 80                        
+                            max_text_length: 50                                          
                         MDRaisedButton:
-                            id: categoria_add
+                            id: categoria
                             text: "Categoria"
-                            size_hint_x: 1
-                            size_hint_y: 0.15
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
-                            on_release: root.open_menu(self, "add")
+                            size_hint_x: dp(root.comprimento_x)
+                            size_hint_y: 0.22
+                            pos_hint: {'center_y': 0.5}
+                            on_release: root.open_menu(self, "add") 
                         MDRaisedButton:
                             id: pagamento
                             text: "Pagamento"
-                            size_hint_x: 1
-                            size_hint_y: 0.15
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            size_hint_x: dp(root.comprimento_x)
+                            size_hint_y: 0.22
+                            pos_hint: {'center_y': 0.5}
                             on_release: root.open_menu(self, "pagamento")
                         MDRaisedButton:
-                            id: data
+                            id: data                            
                             text: root.hoje
-                            size_hint_x: 1
-                            size_hint_y: 0.15
-                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            size_hint_x: dp(root.comprimento_x)
+                            size_hint_y: 0.22
+                            pos_hint: {'center_y': 0.5}
                             on_release: root.mostrar_calendario(self)                        
                         MDRaisedButton:
                             text: "Adicionar"
@@ -99,7 +100,7 @@
                             pos_hint: {'center_x': 0.5, 'center_y': 0.5}
                             on_release: root.adicionar_gasto(self)
                     MDBoxLayout:
-                        size_hint_y: .1    
+                        size_hint_y: .1 
         MDScreen:
             name: 'detalhes'
             ScrollView:
@@ -136,7 +137,28 @@
                         ScrollView:
                             MDList:
                                 id: meses_container    
-                            
+        MDScreen:
+            name: 'graficos'
+            ScrollView:            
+                MDBoxLayout:
+                    orientation: "vertical"
+                    padding: 20
+                    spacing: 2
+                    size_hint_y: 1
+                    md_bg_color: 0, 0, 0.5, 1
+                    MDBoxLayout:
+                        padding: 10
+                        spacing: dp(50)
+                        pos_hint: {"center_x": .5, "center_y": .8}
+                        size_hint_y:0.2
+                        md_bg_color:0, 0.2, 1, 1
+                        MDDropDownItem:
+                            id: categoria_add
+                            text: "Categoria"
+                            size_hint_x: 1
+                            size_hint_y: 0.15
+                            pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                            on_release: root.open_menu(self, "add")                             
 
     NavBar
         padding: dp(3)
